@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>BioMasters Beta Feedback</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;600;700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: a field-notebook questionnaire, one column, sections as numbered pages of a logbook; phone first. */
+:root{
+  --bg:#f3f5ef; --panel:#ffffff; --row:#f6f8f1; --line:#d6dccd; --fg:#15201a; --mute:#5b6b5e;
+  --accent:#4c7a12; --accent-ink:#2f4f08; --accent-soft:#e3f0cf; --ok:#2f8f4e; --ok-soft:#dcf3e3; --warn:#b7780c; --warn-soft:#fbead0;
+  --display:"Roboto Condensed",Arial Narrow,Arial,sans-serif; --body:"Source Sans 3",Segoe UI,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1612; --panel:#17211b; --row:#1c2820; --line:#2d3b32; --fg:#eef3ea; --mute:#9fb0a2;
+  --accent:#b4e94a; --accent-ink:#d6f58a; --accent-soft:#263a14; --ok:#6fd690; --ok-soft:#163a24; --warn:#f0b24f; --warn-soft:#43300f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1612; --panel:#17211b; --row:#1c2820; --line:#2d3b32; --fg:#eef3ea; --mute:#9fb0a2;
+  --accent:#b4e94a; --accent-ink:#d6f58a; --accent-soft:#263a14; --ok:#6fd690; --ok-soft:#163a24; --warn:#f0b24f; --warn-soft:#43300f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:17px/1.5 var(--body);margin:0}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:720px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 56px}
+header h1{font:700 32px/1.05 var(--display);margin:0;text-wrap:balance}
+header p{color:var(--mute);margin:8px 0 0;max-width:62ch}
+.prog{position:sticky;top:env(safe-area-inset-top,0px);z-index:3;background:var(--bg);padding-block:10px 8px;margin-top:14px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.prog small{display:block;color:var(--mute);font-size:13px;margin-top:4px;font-variant-numeric:tabular-nums}
+section{margin-top:22px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+section h2{font:700 22px/1.1 var(--display);margin:0;display:flex;gap:10px;align-items:baseline}
+section h2 span{font:600 12px var(--display);letter-spacing:.08em;color:var(--mute)}
+section .lead{color:var(--mute);font-size:15px;margin:4px 0 0}
+.q{margin-top:18px}
+.q label.t,.q .t{display:block;font-weight:600;margin-bottom:6px}
+.q .t em{font-style:normal;font-weight:400;color:var(--mute);font-size:14px}
+.q input[type=text],.q textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--row);color:var(--fg);font:16px var(--body)}
+.q textarea{min-height:76px;resize:vertical}
+.scale{display:flex;gap:6px;flex-wrap:wrap}
+.scale button{flex:1 1 44px;min-width:44px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--row);font-weight:600}
+.scale button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#0f1612}
+.ends{display:flex;justify-content:space-between;color:var(--mute);font-size:13px;margin-top:4px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips button{padding:9px 13px;min-height:44px;border:1px solid var(--line);border-radius:999px;background:var(--row)}
+.chips button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.nps{display:grid;grid-template-columns:repeat(11,1fr);gap:4px}
+.nps button{min-height:44px;border:1px solid var(--line);border-radius:8px;background:var(--row);font-weight:600;padding:0}
+.nps button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#0f1612}
+.send{margin-top:22px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
+.send .go{width:100%;min-height:52px;border-radius:12px;background:var(--accent);color:#0f1612;font:700 18px var(--display);letter-spacing:.02em}
+.send .go[disabled]{opacity:.6;cursor:default}
+.status{margin-top:12px;padding:12px;border-radius:10px;font-size:15px;display:none}
+.status.ok{display:block;background:var(--ok-soft);color:var(--fg);border:1px solid var(--ok)}
+.status.warn{display:block;background:var(--warn-soft);color:var(--fg);border:1px solid var(--warn)}
+.out{margin-top:10px}
+.out textarea{width:100%;min-height:180px;font:14px/1.4 ui-monospace,Menlo,Consolas,monospace;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--row);color:var(--fg)}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.row button{padding:10px 14px;min-height:44px;border:1px solid var(--line);border-radius:10px;background:var(--row);font-weight:600}
+.foot{color:var(--mute);font-size:13px;margin-top:18px}
+@media (max-width:420px){.nps{grid-template-columns:repeat(6,1fr)}}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>BioMasters Beta Feedback</h1>
+    <p>Thank you for playing. Nobody told you what to do on purpose, so your honest first impressions are exactly what we need. Every question is optional. It takes about 8 minutes.</p>
+  </header>
+  <div class="prog"><div class="bar"><i id="bar"></i></div><small id="count">0 answered</small></div>
+  <main id="form"></main>
+  <div class="send">
+    <button class="go" id="go">Send my feedback</button>
+    <div class="status" id="status"></div>
+    <div class="out" id="out" hidden>
+      <textarea id="outtext" readonly aria-label="Your answers as text"></textarea>
+      <div class="row"><button id="copy">Copy answers</button><button id="dl">Save as a file</button></div>
+    </div>
+  </div>
+  <p class="foot">Your answers stay on this device as you type, so you can close and come back. Nothing is sent until you tap Send.</p>
+</div>
+
+<script>
+// ---------- Questions ----------
+// types: text, long, scale (1-5 with end labels), chips (multi), one (single chips), nps (0-10)
+const SECTIONS=[
+{t:"About you", lead:"So we know whose eyes we're looking through.", q:[
+  {i:"name", t:"Name or nickname", ty:"text", opt:true},
+  {i:"device", t:"What did you play on?", ty:"chips", o:["Android phone","iPhone","Tablet","Laptop or desktop","Installed app","Browser"]},
+  {i:"time", t:"Roughly how long have you played so far?", ty:"one", o:["Under 15 min","15–60 min","1–3 hours","More than 3 hours"]},
+  {i:"cardgames", t:"Have you played card games like Pokémon, Hearthstone or Magic before?", ty:"one", o:["Never","A little","Regularly"]},
+  {i:"nature", t:"How interested are you in animals, plants and nature?", ty:"scale", lo:"Not really", hi:"Very"},
+]},
+{t:"Signing up", lead:"The very first screen.", q:[
+  {i:"signup_ease", t:"How easy was it to sign up or start playing?", ty:"scale", lo:"Painful", hi:"Effortless"},
+  {i:"signup_path", t:"How did you get in?", ty:"one", o:["Played as guest","Email and password","Google","Facebook","Don't remember"]},
+  {i:"signup_issue", t:"Did anything confuse you or fail during sign up? What?", ty:"long"},
+]},
+{t:"First minutes", lead:"Before you knew anything.", q:[
+  {i:"first_do", t:"What did you do first, and why that?", ty:"long"},
+  {i:"knew_what", t:"After one minute on the home screen, did you know what to do next?", ty:"scale", lo:"Lost", hi:"Obvious"},
+  {i:"tutorial", t:"Did you play the training match (Match One)?", ty:"one", o:["Yes, finished it","Started, didn't finish","Skipped it","Never saw it"]},
+  {i:"tutorial_help", t:"If you played it, did it teach you enough to play on your own?", ty:"scale", lo:"Not at all", hi:"Completely"},
+  {i:"guides", t:"The little guide pop-ups with the parrot and the explorer: were they…", ty:"chips", o:["Helpful","Too many","Too long","Too small to read","In the way","Fine","Didn't notice them"]},
+  {i:"onboarding_note", t:"Anything about the first minutes you'd change?", ty:"long"},
+]},
+{t:"Understanding the game", lead:"Be honest, this is the part we most need.", q:[
+  {i:"goal", t:"In one sentence, what is the goal of a battle?", ty:"long"},
+  {i:"clear", t:"Which of these made sense to you?", ty:"chips", o:["Producers, herbivores, carnivores","Placing cards next to what they eat","Paying a cost by tiring out your cards","Victory points","Decomposers and dead matter","Event cards","Why a card can't be placed","The turn timer"]},
+  {i:"stuck", t:"Where did you get stuck or give up, if anywhere?", ty:"long"},
+  {i:"rules", t:"Did you ever look for the rules or a help button? Did you find what you needed?", ty:"long"},
+]},
+{t:"Playing", lead:"What you tried and how it felt.", q:[
+  {i:"modes", t:"Which did you try?", ty:"chips", o:["Practice battle vs AI","Campaign story","Online battle","Card Matching","Bingo","Bio Compare","Quick Sort","Daily Challenge","Sanctuary","Party with friends","Opened packs","Built a deck"]},
+  {i:"most_fun", t:"Which was the most fun, and what made it fun?", ty:"long"},
+  {i:"least_fun", t:"Which was the least fun or most confusing?", ty:"long"},
+  {i:"ai", t:"If you battled the AI: how did it feel?", ty:"one", o:["Too easy","About right","Too hard","It did strange things","Didn't battle"]},
+  {i:"match_len", t:"A battle felt…", ty:"one", o:["Too short","Right length","Too long","Didn't finish one"]},
+  {i:"fun", t:"Overall, how much fun are you having?", ty:"scale", lo:"None", hi:"A lot"},
+]},
+{t:"Look and feel", lead:"Design, readability, speed.", q:[
+  {i:"design", t:"How does the game look?", ty:"scale", lo:"Rough", hi:"Beautiful"},
+  {i:"readable", t:"Could you read everything comfortably on your screen?", ty:"scale", lo:"Squinting", hi:"Easily"},
+  {i:"speed", t:"Did it feel fast and smooth?", ty:"scale", lo:"Laggy", hi:"Smooth"},
+  {i:"sound", t:"Sound and music", ty:"one", o:["Liked it","Didn't notice","Turned it off","Annoying"]},
+  {i:"look_note", t:"Anything that looked wrong, cut off, or out of place? Where?", ty:"long"},
+]},
+{t:"Learning", lead:"The game is built on real species.", q:[
+  {i:"learned", t:"Did you learn something about nature while playing?", ty:"scale", lo:"Nothing", hi:"A lot"},
+  {i:"fact", t:"Name one species or fact you remember from the game", ty:"text"},
+  {i:"edu", t:"Did the science get in the way of the fun, or add to it?", ty:"one", o:["Got in the way","Neutral","Added to it"]},
+]},
+{t:"Coming back", lead:"The questions that matter most to us.", q:[
+  {i:"nps", t:"How likely are you to recommend BioMasters to a friend?", ty:"nps"},
+  {i:"return", t:"What would make you open it again tomorrow?", ty:"long"},
+  {i:"missing", t:"What's missing that you expected to find?", ty:"long"},
+  {i:"change", t:"If you could change one thing, what would it be?", ty:"long"},
+  {i:"keep", t:"What should we never change?", ty:"long"},
+  {i:"bugs", t:"Anything broken? Tell us what you did and what happened.", ty:"long"},
+  {i:"contact", t:"Can we message you with a follow-up question? Leave a handle or email if yes.", ty:"text", opt:true},
+]},
+];
+
+// ---------- State ----------
+const LS="biomasters-beta-feedback-v1";
+let ans={};
+try{ ans=JSON.parse(localStorage.getItem(LS)||"{}")||{}; }catch(e){ ans={}; }
+function save(){ try{ localStorage.setItem(LS,JSON.stringify(ans)); }catch(e){} progress(); }
+const allQ=[]; SECTIONS.forEach(s=>s.q.forEach(q=>allQ.push(q)));
+function answered(q){ const v=ans[q.i]; if(v==null) return false; if(Array.isArray(v)) return v.length>0; return String(v).trim()!==""; }
+function progress(){ const n=allQ.filter(answered).length; document.getElementById("bar").style.width=(100*n/allQ.length)+"%"; document.getElementById("count").textContent=n+" of "+allQ.length+" answered"; }
+
+// ---------- Render ----------
+function esc(s){ return String(s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+function render(){
+  const main=document.getElementById("form");
+  main.innerHTML=SECTIONS.map((s,si)=>`<section><h2><span>${String(si+1).padStart(2,"0")}</span>${esc(s.t)}</h2><p class="lead">${esc(s.lead)}</p>${s.q.map(qHtml).join("")}</section>`).join("");
+}
+function qHtml(q){
+  const v=ans[q.i];
+  const id="q-"+q.i;
+  let body="";
+  if(q.ty==="text") body=`<input type="text" id="${id}" data-q="${q.i}" value="${esc(v||"")}" autocomplete="off">`;
+  else if(q.ty==="long") body=`<textarea id="${id}" data-q="${q.i}">${esc(v||"")}</textarea>`;
+  else if(q.ty==="scale") body=`<div class="scale" role="group" aria-label="${esc(q.t)}">${[1,2,3,4,5].map(n=>`<button type="button" data-q="${q.i}" data-v="${n}" data-k="one" aria-pressed="${v==n}">${n}</button>`).join("")}</div><div class="ends"><span>${esc(q.lo)}</span><span>${esc(q.hi)}</span></div>`;
+  else if(q.ty==="nps") body=`<div class="nps" role="group" aria-label="${esc(q.t)}">${Array.from({length:11},(_,n)=>`<button type="button" data-q="${q.i}" data-v="${n}" data-k="one" aria-pressed="${v==n}">${n}</button>`).join("")}</div><div class="ends"><span>Not likely</span><span>Very likely</span></div>`;
+  else if(q.ty==="one") body=`<div class="chips" role="group" aria-label="${esc(q.t)}">${q.o.map(o=>`<button type="button" data-q="${q.i}" data-v="${esc(o)}" data-k="one" aria-pressed="${v===o}">${esc(o)}</button>`).join("")}</div>`;
+  else if(q.ty==="chips") body=`<div class="chips" role="group" aria-label="${esc(q.t)}">${q.o.map(o=>`<button type="button" data-q="${q.i}" data-v="${esc(o)}" data-k="multi" aria-pressed="${Array.isArray(v)&&v.includes(o)}">${esc(o)}</button>`).join("")}</div>`;
+  return `<div class="q"><${q.ty==="text"||q.ty==="long"?`label class="t" for="${id}"`:`div class="t"`}>${esc(q.t)}${q.opt?' <em>(optional)</em>':''}</${q.ty==="text"||q.ty==="long"?"label":"div"}>${body}</div>`;
+}
+render(); progress();
+
+document.getElementById("form").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-q]"); if(!b) return;
+  const q=b.dataset.q, v=b.dataset.v;
+  if(b.dataset.k==="multi"){ const cur=Array.isArray(ans[q])?ans[q].slice():[]; const i=cur.indexOf(v); if(i>=0) cur.splice(i,1); else cur.push(v); ans[q]=cur; }
+  else { ans[q]=(String(ans[q])===v)?null:(isNaN(v)?v:Number(v)); }
+  save();
+  const grp=b.parentElement; grp.querySelectorAll("button").forEach(x=>{ const on=b.dataset.k==="multi"?(ans[q]||[]).includes(x.dataset.v):String(ans[q])===x.dataset.v; x.setAttribute("aria-pressed",String(on)); });
+});
+document.getElementById("form").addEventListener("input",e=>{ const el=e.target.closest("[data-q]"); if(el){ ans[el.dataset.q]=el.value; save(); } });
+
+// ---------- Send ----------
+function summary(){
+  const lines=["BioMasters beta feedback","Date: "+new Date().toLocaleString(),""];
+  SECTIONS.forEach(s=>{ lines.push("## "+s.t); s.q.forEach(q=>{ if(!answered(q)) return; const v=ans[q.i]; lines.push("- "+q.t+": "+(Array.isArray(v)?v.join(", "):String(v))); }); lines.push(""); });
+  return lines.join("\n");
+}
+function setStatus(kind,text){ const st=document.getElementById("status"); st.className="status "+kind; st.textContent=text; }
+const dbp=Promise.resolve(null);
+document.getElementById("go").addEventListener("click",async()=>{
+  const go=document.getElementById("go"); go.disabled=true; go.textContent="Preparing…";
+  const text=summary();
+  const doc={answers:Object.fromEntries(allQ.filter(answered).map(q=>[q.i,ans[q.i]])), text, ua:navigator.userAgent, at:new Date().toISOString()};
+  let saved=false;
+  try{ const db=await dbp; if(db){ await db.collection("responses").add(doc); saved=true; } }catch(e){ saved=false; }
+  document.getElementById("outtext").value=text;
+  if(saved){
+    setStatus("ok","Sent. Thank you, this really helps. If you think of more later, just send again.");
+    go.textContent="Sent";
+  } else {
+    setStatus("ok","Almost done. Your answers are below: tap Copy answers and paste them to Francis on WhatsApp, Slack or email. Or save the file and send that.");
+    document.getElementById("out").hidden=false;
+    go.disabled=false; go.textContent="Show my answers again";
+  }
+});
+document.getElementById("copy").addEventListener("click",async()=>{
+  const ta=document.getElementById("outtext");
+  try{ await navigator.clipboard.writeText(ta.value); setStatus("ok","Copied. Now paste it to Francis."); }
+  catch(e){ ta.focus(); ta.select(); setStatus("warn","Select all the text above and copy it."); }
+});
+document.getElementById("dl").addEventListener("click",()=>{
+  try{ const blob=new Blob([document.getElementById("outtext").value],{type:"text/plain"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="biomasters-feedback.txt"; document.body.appendChild(a); a.click(); a.remove(); setStatus("ok","Saved. Send the file to Francis."); }
+  catch(e){ setStatus("warn","Saving a file isn't available here. Use Copy answers instead."); }
+});
+</script>
+
+</body>
+</html>
